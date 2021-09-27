@@ -1,3 +1,4 @@
+/* eslint-disable multiline-ternary */
 /* eslint-disable indent */
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
@@ -6,9 +7,17 @@ import Pagination from "./pagination";
 import GroupList from "./groupList";
 import api from "../api";
 import SearchStatus from "./searchStatus";
-import UserTable from "./usersTable";
+// import UserTable from "./usersTable";
 import _ from "lodash";
+import UserList from "./userList";
+import UserPage from "./userPage";
+import { useParams } from "react-router";
+import Loader from "./loader";
+
 const Users = () => {
+    const params = useParams();
+    const userId = params.userId;
+
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
@@ -16,9 +25,12 @@ const Users = () => {
     const pageSize = 8;
 
     const [users, setUsers] = useState();
+
     useEffect(() => {
         console.log("send request users");
-        api.users.fetchAll().then((data) => setUsers(data));
+        api.users.fetchAll().then((data) => {
+            setUsers(data);
+        });
     }, []);
 
     const handleDelete = (userId) => {
@@ -38,7 +50,10 @@ const Users = () => {
 
     useEffect(() => {
         console.log("send reqest professions");
-        api.professions.fetchAll().then((data) => setProfession(data));
+        api.professions.fetchAll().then((data) => {
+            setProfession(data);
+        });
+        return () => {};
     }, []);
     useEffect(() => {
         setCurrentPage(1);
@@ -73,7 +88,9 @@ const Users = () => {
         const clearFilter = () => {
             setSelectedProf();
         };
-        return (
+        return userId ? (
+            <UserPage users={usersCrop} id={userId} />
+        ) : (
             <div className="d-flex">
                 {professions && (
                     <div className="d-flex flex-column flex-shrink-0 p-3">
@@ -93,7 +110,7 @@ const Users = () => {
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
                     {count > 0 && (
-                        <UserTable
+                        <UserList
                             users={usersCrop}
                             onSort={handleSort}
                             selectedSort={sortBy}
@@ -113,10 +130,11 @@ const Users = () => {
             </div>
         );
     }
-    return "Loading...";
+    return <Loader />;
 };
 Users.propTypes = {
-    users: PropTypes.array
+    users: PropTypes.array,
+    match: PropTypes.object
 };
 
 export default Users;
