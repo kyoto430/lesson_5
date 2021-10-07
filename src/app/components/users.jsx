@@ -7,12 +7,12 @@ import Pagination from "./pagination";
 import GroupList from "./groupList";
 import api from "../api";
 import SearchStatus from "./searchStatus";
-// import UserTable from "./usersTable";
 import _ from "lodash";
 import UserList from "./userList";
 import UserPage from "./userPage";
 import { useParams } from "react-router";
 import Loader from "./loader";
+import SearchBar from "./searchBar";
 
 const Users = () => {
     const params = useParams();
@@ -25,6 +25,12 @@ const Users = () => {
     const pageSize = 8;
 
     const [users, setUsers] = useState();
+
+    const [search, setSearch] = useState("");
+    const handleChange = (e) => {
+        setSearch(e.target.value);
+        setSelectedProf();
+    };
 
     useEffect(() => {
         console.log("send request users");
@@ -58,6 +64,9 @@ const Users = () => {
     useEffect(() => {
         setCurrentPage(1);
     }, [selectedProf]);
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search]);
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
         console.log("page: ", pageIndex);
@@ -65,25 +74,31 @@ const Users = () => {
     const handleProfessionSelect = (item) => {
         console.log("prof select", item);
         setSelectedProf(item);
+        setSearch("");
     };
     const handleSort = (item) => {
         setSortBy(item);
     };
 
     if (users) {
+        const searchedUsers = users.filter((user) => {
+            return user.name.includes(search);
+        });
         const filteredUsers = selectedProf
             ? users.filter(
                   (user) =>
                       JSON.stringify(user.profession) ===
                       JSON.stringify(selectedProf)
               )
-            : users;
+            : searchedUsers;
+
         const count = filteredUsers.length;
         const sortedUsers = _.orderBy(
             filteredUsers,
             [sortBy.path],
             [sortBy.order]
         );
+
         const usersCrop = paginate(sortedUsers, currentPage, pageSize);
         const clearFilter = () => {
             setSelectedProf();
@@ -109,6 +124,7 @@ const Users = () => {
                 )}
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
+                    <SearchBar search={search} onItemSearch={handleChange} />
                     {count > 0 && (
                         <UserList
                             users={usersCrop}
