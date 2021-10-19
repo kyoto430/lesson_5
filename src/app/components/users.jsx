@@ -82,7 +82,7 @@ const Users = () => {
 
     if (users) {
         const searchedUsers = users.filter((user) => {
-            return user.name.includes(search);
+            return user.name.toLowerCase().includes(search.toLowerCase());
         });
         const filteredUsers = selectedProf
             ? users.filter(
