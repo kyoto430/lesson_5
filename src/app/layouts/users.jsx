@@ -3,16 +3,16 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { paginate } from "../utils/paginate";
-import Pagination from "./pagination";
-import GroupList from "./groupList";
+import Pagination from "../components/common/pagination";
+import GroupList from "../components/common/groupList";
 import api from "../api";
-import SearchStatus from "./searchStatus";
+import SearchStatus from "../components/ui/searchStatus";
 import _ from "lodash";
-import UserList from "./userList";
-import UserPage from "./userPage";
+import UserList from "../components/page/usersListPage";
+import UserPage from "../components/page/userPage";
 import { useParams } from "react-router";
-import Loader from "./loader";
-import SearchBar from "./searchBar";
+import Loader from "../components/common/loader";
+import SearchBar from "../components/ui/searchBar";
 
 const Users = () => {
     const params = useParams();

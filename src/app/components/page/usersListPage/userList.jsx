@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import UserTable from "./usersTable";
+import UserTable from "../../ui/usersTable";
 const UserList = ({ ...rest }) => {
     return <UserTable {...rest} />;
 };
