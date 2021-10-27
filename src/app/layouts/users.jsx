@@ -13,10 +13,10 @@ import UserPage from "../components/page/userPage";
 import { useParams } from "react-router";
 import Loader from "../components/common/loader";
 import SearchBar from "../components/ui/searchBar";
+import EditPage from "../components/page/editPage/index";
 
 const Users = () => {
-    const params = useParams();
-    const userId = params.userId;
+    const { userId, edit } = useParams();
 
     const [currentPage, setCurrentPage] = useState(1);
     const [professions, setProfession] = useState();
@@ -103,47 +103,56 @@ const Users = () => {
         const clearFilter = () => {
             setSelectedProf();
         };
-        return userId ? (
-            <UserPage users={usersCrop} id={userId} />
-        ) : (
-            <div className="d-flex">
-                {professions && (
-                    <div className="d-flex flex-column flex-shrink-0 p-3">
-                        <GroupList
-                            selectedItem={selectedProf}
-                            items={professions}
-                            onItemSelect={handleProfessionSelect}
-                        />
-                        <button
-                            className="btn btn-secondary mt-2"
-                            onClick={clearFilter}
-                        >
-                            Очистить
-                        </button>
+        return (
+            <>
+                {userId && edit ? (
+                    <EditPage />
+                ) : userId ? (
+                    <UserPage />
+                ) : (
+                    <div className="d-flex">
+                        {professions && (
+                            <div className="d-flex flex-column flex-shrink-0 p-3">
+                                <GroupList
+                                    selectedItem={selectedProf}
+                                    items={professions}
+                                    onItemSelect={handleProfessionSelect}
+                                />
+                                <button
+                                    className="btn btn-secondary mt-2"
+                                    onClick={clearFilter}
+                                >
+                                    Очистить
+                                </button>
+                            </div>
+                        )}
+                        <div className="d-flex flex-column">
+                            <SearchStatus length={count} />
+                            <SearchBar
+                                search={search}
+                                onItemSearch={handleChange}
+                            />
+                            {count > 0 && (
+                                <UserList
+                                    users={usersCrop}
+                                    onSort={handleSort}
+                                    selectedSort={sortBy}
+                                    onDelete={handleDelete}
+                                    onToggleBookMark={handleToggleBookMark}
+                                />
+                            )}
+                            <div className="d-flex justify-content-center">
+                                <Pagination
+                                    itemsCount={count}
+                                    pageSize={pageSize}
+                                    currentPage={currentPage}
+                                    onPageChange={handlePageChange}
+                                />
+                            </div>
+                        </div>
                     </div>
                 )}
-                <div className="d-flex flex-column">
-                    <SearchStatus length={count} />
-                    <SearchBar search={search} onItemSearch={handleChange} />
-                    {count > 0 && (
-                        <UserList
-                            users={usersCrop}
-                            onSort={handleSort}
-                            selectedSort={sortBy}
-                            onDelete={handleDelete}
-                            onToggleBookMark={handleToggleBookMark}
-                        />
-                    )}
-                    <div className="d-flex justify-content-center">
-                        <Pagination
-                            itemsCount={count}
-                            pageSize={pageSize}
-                            currentPage={currentPage}
-                            onPageChange={handlePageChange}
-                        />
-                    </div>
-                </div>
-            </div>
+            </>
         );
     }
     return <Loader />;

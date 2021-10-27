@@ -5,6 +5,10 @@ import Quality from "./quality";
 const QualitiesList = ({ qualities }) => {
     return (
         <>
+            {!Array.isArray(qualities) &&
+                Object.keys(qualities).map((quality) => (
+                    <Quality key={qualities[quality]._id} {...quality} />
+                ))}
             {qualities.map((qual) => (
                 <Quality key={qual._id} {...qual} />
             ))}
