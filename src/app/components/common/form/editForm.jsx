@@ -95,6 +95,13 @@ const EditForm = ({ user }) => {
 
     return (
         <div className="container">
+            <button
+                onClick={() => history.goBack()}
+                className="btn btn-primary pe-4"
+                disabled={!professions}
+            >
+                <i className="bi bi-caret-left"></i>Назад
+            </button>
             <h1>Редактировать</h1>
             <form onSubmit={handleSubmit}>
                 <TextField
