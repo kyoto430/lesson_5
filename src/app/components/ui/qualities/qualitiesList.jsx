@@ -1,17 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Quality from "./quality";
+import { useQualities } from "../../../hooks/useQualities";
 
-const QualitiesList = ({ qualities }) => {
+const QualitiesList = ({ qualities: qualitiesArray }) => {
+    const { qualities } = useQualities();
+    const qual = qualities.filter((q) => qualitiesArray.includes(q._id));
     return (
         <>
-            {!Array.isArray(qualities) &&
-                Object.keys(qualities).map((quality) => (
-                    <Quality key={qualities[quality]._id} {...quality} />
-                ))}
-            {qualities.map((qual) => (
-                <Quality key={qual._id} {...qual} />
-            ))}
+            {qual.map((quality, index) => {
+                return <Quality key={index} {...quality} />;
+            })}
         </>
     );
 };

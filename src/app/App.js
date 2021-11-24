@@ -7,6 +7,7 @@ import Login from "./layouts/login";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ProfessionProvider } from "./hooks/useProfession.jsx";
+import { QualityProvider } from "./hooks/useQualities.jsx";
 
 function App() {
     return (
@@ -14,8 +15,13 @@ function App() {
             <NavBar />
             <Switch>
                 <ProfessionProvider>
-                    <Route path="/users/:userId?/:edit?" component={Users} />
-                    <Route path="/login/:type?" component={Login} />
+                    <QualityProvider>
+                        <Route
+                            path="/users/:userId?/:edit?"
+                            component={Users}
+                        />
+                        <Route path="/login/:type?" component={Login} />
+                    </QualityProvider>
                 </ProfessionProvider>
                 <Route path="/" exact component={Main} />
                 <Redirect to="/" />
